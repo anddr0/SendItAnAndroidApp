@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">SendIt!</string>
+    <string name="app_name">ProgressIt!</string>
+
+    <string name="google_log_in">Continue with Google</string>
+
+    //Login
+    <string name="email">Email Address</string>
+    <string name="pass">Password</string>
+    <string name="pass_repeat">Repeat Password</string>
+    <string name="login">SignIn</string>
+    <string name="login_with">or continue with:</string>
+    <string name="signup">Signup</string>
+    <string name="user_registered">"You are already registered. \nPlease, SignIn"</string>
+
+
 </resources>
