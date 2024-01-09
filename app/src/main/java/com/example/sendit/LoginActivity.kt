@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun signIn() {
-        val sing_in_intent: Intent = gsc.getSignInIntent()
+        val sing_in_intent: Intent = gsc.signInIntent
         startActivityForResult(sing_in_intent, 1000)
     }
 
@@ -57,7 +57,8 @@ class LoginActivity : AppCompatActivity() {
                 task.getResult(ApiException::class.java)
                 navigateToSecondActivity()
             } catch (e: ApiException) {
-                Toast.makeText(applicationContext, "Something went wrong", Toast.LENGTH_SHORT)
+
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT)
                     .show()
             }
         }

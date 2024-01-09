@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.SendIt" parent="Base.Theme.SendIt" />
+    <style name="Theme.SendIt.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SendIt.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
