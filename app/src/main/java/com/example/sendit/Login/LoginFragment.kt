@@ -35,7 +35,9 @@ class LoginFragment : Fragment() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btLogin: Button
-    private lateinit var pass_frgt: TextView
+    private lateinit var passFrgt: TextView
+    private lateinit var tvWarning1: TextView
+    private lateinit var tvWarning2: TextView
 
     private var param1: String? = null
     private var param2: String? = null
@@ -60,8 +62,10 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         etEmail = view.findViewById(R.id.et_login)
         etPassword = view.findViewById(R.id.et_password)
-        pass_frgt = view.findViewById(R.id.pass_frgt)
+        passFrgt = view.findViewById(R.id.pass_frgt)
         btLogin = view.findViewById(R.id.bt_login)
+        tvWarning1 = view.findViewById(R.id.tv_warning1)
+        tvWarning2 = view.findViewById(R.id.tv_warning2)
 
         etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -98,12 +102,19 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateLoginButtonState() {
-        val emailFilled = etEmail.text.toString().trim().isNotEmpty()
-        val passwordFilled = etPassword.text.toString().trim().isNotEmpty()
-        btLogin.isEnabled = emailFilled && passwordFilled
+        val emailCorrect = emailValidate(etEmail.text.toString().trim())
+        val passwordCorrect = passwordValidate(etPassword.text.toString().trim())
+        btLogin.isEnabled = emailCorrect && passwordCorrect
     }
 
-    fun navigateToSecondActivity() {
+    private fun emailValidate(email: String): Boolean {
+        return true
+    }
+    private fun passwordValidate(password: String): Boolean {
+        return true
+    }
+
+    private fun navigateToSecondActivity() {
         val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent)
         activity?.finish()
