@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="border">#DBD7D5</color>
-    <color name="required_value">#F48076</color>
-
+    <color name="border">#73716F</color>
 
     <color name="seed">#b8f4c2</color>
     <color name="md_theme_light_primary">#066D37</color>
