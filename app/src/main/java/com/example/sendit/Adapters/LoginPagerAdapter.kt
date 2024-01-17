@@ -1,12 +1,12 @@
 package com.example.sendit.Adapters
 
+import TabFragment
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.sendit.Login.LoginActivity
 import com.example.sendit.Login.LoginFragment
 import com.example.sendit.Login.SignupFragment
 
-class LoginPagerAdapter(fa: LoginActivity): FragmentStateAdapter(fa) {
+class LoginPagerAdapter(fa: TabFragment): FragmentStateAdapter(fa) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> LoginFragment.newInstance("f1", "page #1")

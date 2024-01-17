@@ -13,7 +13,8 @@ data class User(
     @Serializable(with = LocalDateTimeSerializer::class)
     val dataUr: LocalDateTime,
     val email: String,
-    val haslo: String
+    val password: String,
+    val description: String
 )
 
 @Serializable
@@ -22,15 +23,9 @@ data class NewUser(
     @Serializable(with = LocalDateTimeSerializer::class)
     val dataUr: LocalDateTime,
     val email: String,
-    val haslo: String
+    val password: String,
+    val description: String
 )
-
-@Serializable
-data class EmailWrapper(val email: String)
-
-@Serializable
-data class LoggedUserWrapper(val email: String, val password: String)
-
 
 object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LocalDateTime", PrimitiveKind.STRING)

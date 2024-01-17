@@ -1,15 +1,9 @@
 package com.example.sendit.Login
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextPaint
 import android.text.TextWatcher
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +11,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager2.widget.ViewPager2
-import com.example.sendit.MainActivity
+import com.example.sendit.HelperFunctions
+import com.example.sendit.NavMainActivity
 import com.example.sendit.R
 import com.example.sendit.Repos.SupabaseRepo
 
@@ -32,6 +24,8 @@ private const val ARG_PARAM2 = "param2"
 
 class LoginFragment : Fragment() {
     private val sbRepo = SupabaseRepo()
+    private val helpersFuncs = HelperFunctions()
+
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btLogin: Button
@@ -86,36 +80,33 @@ class LoginFragment : Fragment() {
         })
 
 
-        btLogin.setOnClickListener {
+        btLogin.setOnClickListener {view ->
             val email = etEmail.text.toString().trim()
             val pass = etPassword.text.toString().trim()
 
-            sbRepo.isUserExists(lifecycleScope, email, pass) { exists ->
+            sbRepo.signIn(lifecycleScope, email, pass) { exists, idU ->
                 if (exists) {
+                    helpersFuncs.changeTVHeight(tvWarning2, 0)
+                    helpersFuncs.saveUserLogging(view, idU)
                     navigateToSecondActivity()
-                    view.context.getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE).edit().putBoolean("SignedIn", true).apply()
                 } else {
-                    Toast.makeText(view.context, "You are not registered :)", Toast.LENGTH_SHORT).show()
+                    tvWarning2.text = getString(R.string.warn_email_or_pass)
+                    helpersFuncs.changeTVHeight(tvWarning2)
                 }
             }
         }
     }
 
-    private fun updateLoginButtonState() {
-        val emailCorrect = emailValidate(etEmail.text.toString().trim())
-        val passwordCorrect = passwordValidate(etPassword.text.toString().trim())
-        btLogin.isEnabled = emailCorrect && passwordCorrect
-    }
 
-    private fun emailValidate(email: String): Boolean {
-        return true
-    }
-    private fun passwordValidate(password: String): Boolean {
-        return true
+
+    private fun updateLoginButtonState() {
+        val emailFilled = etEmail.text.toString().trim().isNotEmpty()
+        val passwordFilled = etPassword.text.toString().trim().isNotEmpty()
+        btLogin.isEnabled = emailFilled && passwordFilled
     }
 
     private fun navigateToSecondActivity() {
-        val intent = Intent(activity, MainActivity::class.java)
+        val intent = Intent(activity, NavMainActivity::class.java)
         startActivity(intent)
         activity?.finish()
     }
