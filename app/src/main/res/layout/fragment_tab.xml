@@ -72,17 +72,16 @@
 
         <ImageView
             android:id="@+id/sign_button"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/g" />
+            android:src="@drawable/common_google_signin_btn_icon_dark_normal" />
 
         <TextView
             android:id="@+id/tv_google"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
             android:text="Google"
             android:textSize="22dp" />
     </LinearLayout>

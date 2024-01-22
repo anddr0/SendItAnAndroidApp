@@ -25,11 +25,11 @@ class AddGoalViewModel : ViewModel() {
 
     //-------------------------GOALS-------------------------
     suspend fun addNewGoal(scope: CoroutineScope, view: View, opisC: String, cykicznosc: Boolean, termin: LocalDateTime?): Int {
-        val newGoal = NewGoal(helpersFuncs.getLoggedUserId(view), opisC, LocalDateTime.now(), cykicznosc, termin)
+        val newGoal = NewGoal(helpersFuncs.getLoggedUserId(view), opisC, LocalDateTime.now(), cykicznosc, termin, false)
         return sbRepo.addNewGoal(newGoal)
     }
     fun updateGoal(scope: CoroutineScope, view: View, idC: Int, opisC: String, cykicznosc: Boolean, termin: LocalDateTime?): Deferred<Any> {
-        val goal = Goal(idC, helpersFuncs.getLoggedUserId(view), opisC, LocalDateTime.now(), cykicznosc, termin)
+        val goal = Goal(idC, helpersFuncs.getLoggedUserId(view), opisC, LocalDateTime.now(), cykicznosc, termin, false)
         return sbRepo.updateUserGoal(scope, goal)
     }
     suspend fun getGoalById(idC: Int): Goal {

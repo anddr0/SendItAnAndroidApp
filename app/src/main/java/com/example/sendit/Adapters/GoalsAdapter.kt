@@ -31,7 +31,7 @@ class GoalsAdapter(private val lifecycleScope: LifecycleCoroutineScope, private 
         val chekBox = binding.checkBox
         val tvGoal = binding.tvGoal
         val tvDate = binding.tvDate
-        val ibtEdit = binding.ibtEdit
+        val ibtDescr = binding.ibtEdit
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = GoalRawBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -41,7 +41,7 @@ class GoalsAdapter(private val lifecycleScope: LifecycleCoroutineScope, private 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem = data[position]
 
-        holder.chekBox.isChecked = currentItem.cyklicznosc
+        holder.chekBox.isChecked = currentItem.zrealizowany
         holder.tvGoal.text = currentItem.opisC
         if (currentItem.termin != null) {
             val formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm")
@@ -54,7 +54,19 @@ class GoalsAdapter(private val lifecycleScope: LifecycleCoroutineScope, private 
             }
             helpersFuncs.changeTVHeight(holder.tvDate)
         }
-        holder.ibtEdit.setOnClickListener {
+
+        holder.ibtDescr.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("idC", currentItem.idC)
+            it.findNavController().navigate(
+                R.id.action_nav_home_to_descriptionGoalFragment, bundle)
+        }
+        holder.chekBox.setOnClickListener {
+            currentItem.zrealizowany = holder.chekBox.isChecked
+            viewModel.updateGoalZrealiz(lifecycleScope, currentItem)
+            viewModel.getUserGoals(lifecycleScope, helpersFuncs.getLoggedUserId(holder.itemView))
+        }
+        holder.itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt("idC", currentItem.idC)
             it.findNavController().navigate(

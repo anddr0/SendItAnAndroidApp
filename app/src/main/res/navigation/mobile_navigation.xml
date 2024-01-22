@@ -14,6 +14,10 @@
             android:id="@+id/action_nav_home_to_addGoalFragment"
             app:destination="@id/addGoalFragment"
             app:popUpTo="@id/addGoalFragment"/>
+        <action
+            android:id="@+id/action_nav_home_to_descriptionGoalFragment"
+            app:destination="@id/descriptionGoalFragment"
+            app:popUpTo="@id/descriptionGoalFragment"/>
     </fragment>
 
     <fragment
@@ -23,16 +27,16 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.sendit.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-    <fragment
         android:id="@+id/addGoalFragment"
         android:name="com.example.sendit.ui.home.AddGoalFragment"
-        android:label="fragment_add_goal"
+        android:label="@string/add_new_goal"
         tools:layout="@layout/fragment_add_goal" />
-<!--    <action-->
+    <fragment
+        android:id="@+id/descriptionGoalFragment"
+        android:name="com.example.sendit.ui.DescriptionGoalFragment"
+        android:label="Goal Analize and Description"
+        tools:layout="@layout/fragment_description_goal" />
+    <!--    <action-->
 <!--        android:id="@+id/action_global_addGoalFragment"-->
 <!--        app:destination="@id/addGoalFragment"-->
 <!--        android:title="Add a new Goal"-->

@@ -120,9 +120,6 @@ class AddGoalFragment : Fragment() {
         }
 
         //-----------------------Listeners----------------------
-
-
-
         btDate.setOnClickListener { openDatePicker() }
         etDate.setOnClickListener { openDatePicker() }
 

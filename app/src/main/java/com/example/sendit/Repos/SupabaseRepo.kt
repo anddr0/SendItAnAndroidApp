@@ -2,8 +2,10 @@ package com.example.sendit.Repos
 
 import Goal
 import NewGoal
+import NewRealizedGoal
 import NewSubGoal
 import NewUser
+import RealizedGoal
 import SubGoal
 import User
 import android.util.Log
@@ -13,6 +15,7 @@ import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.serializer.KotlinXSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -92,26 +95,43 @@ class SupabaseRepo {
     //-------------------------GOALS-------------------------
 
     fun getGoalsByUserId(scope: CoroutineScope, idU: Int, callback: (List<Goal>) -> Unit) {
-        scope.launch { callback(client.from("Cele").select() {filter { eq("idU", idU) }}.decodeList<Goal>()) }
+        scope.launch { callback(client.from("Cele").select() {
+            order(column = "dataUt", order = Order.ASCENDING)
+            filter {
+                eq("idU", idU)
+                eq("zrealizowany", false)
+        }}.decodeList<Goal>()) }
     }
     suspend fun getGoalByGoalId(idC: Int): Goal {
         return client.from("Cele").select() {filter { eq("idC", idC) }}.decodeSingle<Goal>()
     }
-//    fun addNewGoal(scope: CoroutineScope, newGoal: NewGoal): Deferred<Any> {
-//        return scope.async { client.from("Cele").insert(newGoal) }
-//    }
     suspend fun addNewGoal(newGoal: NewGoal): Int {
         val response = client.from("Cele").insert(newGoal) { select() }.decodeSingle<Goal>()
         return response.idC
     }
-
     fun updateUserGoal(scope: CoroutineScope, goal: Goal): Deferred<Any> {
         return scope.async { client.from("Cele").update(goal) {filter { eq("idC", goal.idC) }} }
     }
     fun deleteUserGoal(scope: CoroutineScope, idC:Int) {
         scope.launch { client.from("Cele").delete() {filter { eq("idC", idC) }} }
     }
+    //-------------------------FINISHED GOALS-------------------------
 
+    fun getFinishedGoalsByUserId(scope: CoroutineScope, idU: Int, callback: (List<Goal>) -> Unit) {
+        scope.launch { callback(client.from("Cele").select() {
+            order(column = "dataUt", order = Order.ASCENDING)
+            filter {
+                eq("idU", idU)
+                eq("zrealizowany", true)
+        }}.decodeList<Goal>()) }
+    }
+    fun addFinishedGoal(scope: CoroutineScope, finishedGoal: NewRealizedGoal) {
+        scope.launch { client.from("ZrealizowaneCele").insert(finishedGoal) }
+    }
+    fun deleteFinishedGoalByidC(scope: CoroutineScope, idC: Int) {
+        scope.launch { client.from("ZrealizowaneCele").delete()
+        {filter { eq("idC", idC) }} }
+    }
     //-------------------------SUB_GOALS-------------------------
     suspend fun upsertNewSubGoal(scope: CoroutineScope, newSubGoal: NewSubGoal, idP: Int?): Int {
         var getIdP: Int

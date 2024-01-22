@@ -41,7 +41,8 @@ data class Goal(
     val dataUt: LocalDateTime,
     val cyklicznosc: Boolean,
     @Serializable(with = LocalDateTimeSerializer::class)
-    val termin: LocalDateTime?
+    val termin: LocalDateTime?,
+    var zrealizowany: Boolean
 )
 
 @Serializable
@@ -52,7 +53,25 @@ data class NewGoal(
     val dataUt: LocalDateTime,
     val cyklicznosc: Boolean,
     @Serializable(with = LocalDateTimeSerializer::class)
-    val termin: LocalDateTime?
+    val termin: LocalDateTime?,
+    var zrealizowany: Boolean
+)
+
+@Serializable
+data class RealizedGoal(
+    val idZC: Int,
+    val idC: Int,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val dataR: LocalDateTime,
+    val opisR: String
+)
+
+@Serializable
+data class NewRealizedGoal(
+    val idC: Int,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val dataR: LocalDateTime,
+    val opisR: String
 )
 
 @Serializable
