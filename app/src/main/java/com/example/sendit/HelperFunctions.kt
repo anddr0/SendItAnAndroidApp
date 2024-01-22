@@ -32,6 +32,10 @@ class HelperFunctions {
         prefs.apply()
     }
 
+    fun getLoggedUserId(view: View) : Int {
+        return view.context.getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE).getInt("idU" ,-1)
+    }
+
     fun generatePassword(length: Int): String {
         val uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         val lowercaseLetters = "abcdefghijklmnopqrstuvwxyz"

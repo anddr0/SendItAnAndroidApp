@@ -1,8 +1,13 @@
 package com.example.sendit.Repos
 
+import Goal
+import NewGoal
+import NewSubGoal
 import NewUser
+import SubGoal
 import User
 import android.util.Log
+import finishedSubGoal
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
@@ -10,7 +15,10 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.serializer.KotlinXSerializer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import newFinishedSubGoal
 import java.time.LocalDateTime
 
 class SupabaseRepo {
@@ -21,6 +29,8 @@ class SupabaseRepo {
         defaultSerializer = KotlinXSerializer()
         install(Postgrest)
     }
+
+    //-------------------------USERS-------------------------
 
     fun signIn(scope: CoroutineScope, email: String, pass: String, callback: (Boolean, Int) -> Unit) {
         scope.launch {
@@ -37,8 +47,6 @@ class SupabaseRepo {
         scope.launch {
             val ins = client.from("Uzytkownik").insert(
                 NewUser(username, birthDate, email, pass, description))
-        }
-        scope.launch{
             val response = client.from("Uzytkownik").select(Columns.ALL) {filter { eq("email", email) }}.decodeList<User>()[0]
             callback(response.idU)
         }
@@ -57,7 +65,7 @@ class SupabaseRepo {
     }
     fun getUserById(scope: CoroutineScope, idU: Int, callback: (User) -> Unit) {
         scope.launch {
-            val response = client.from("Uzytkownik").select(Columns.ALL) {filter { eq("idU", idU) }}.decodeList<User>()[0]
+            val response = client.from("Uzytkownik").select(Columns.ALL) {filter { eq("idU", idU) }}.decodeSingle<User>()
             callback(response)
         }
     }
@@ -78,6 +86,65 @@ class SupabaseRepo {
                 .decodeList<User>()
             val exists = response.any { it.email == email }
             callback(exists)
+        }
+    }
+
+    //-------------------------GOALS-------------------------
+
+    fun getGoalsByUserId(scope: CoroutineScope, idU: Int, callback: (List<Goal>) -> Unit) {
+        scope.launch { callback(client.from("Cele").select() {filter { eq("idU", idU) }}.decodeList<Goal>()) }
+    }
+    suspend fun getGoalByGoalId(idC: Int): Goal {
+        return client.from("Cele").select() {filter { eq("idC", idC) }}.decodeSingle<Goal>()
+    }
+//    fun addNewGoal(scope: CoroutineScope, newGoal: NewGoal): Deferred<Any> {
+//        return scope.async { client.from("Cele").insert(newGoal) }
+//    }
+    suspend fun addNewGoal(newGoal: NewGoal): Int {
+        val response = client.from("Cele").insert(newGoal) { select() }.decodeSingle<Goal>()
+        return response.idC
+    }
+
+    fun updateUserGoal(scope: CoroutineScope, goal: Goal): Deferred<Any> {
+        return scope.async { client.from("Cele").update(goal) {filter { eq("idC", goal.idC) }} }
+    }
+    fun deleteUserGoal(scope: CoroutineScope, idC:Int) {
+        scope.launch { client.from("Cele").delete() {filter { eq("idC", idC) }} }
+    }
+
+    //-------------------------SUB_GOALS-------------------------
+    suspend fun upsertNewSubGoal(scope: CoroutineScope, newSubGoal: NewSubGoal, idP: Int?): Int {
+        var getIdP: Int
+        if (idP != null) {
+            getIdP = client.from("Podcele").update(newSubGoal) {
+                select()
+                filter{ eq("idP", idP)}
+            }.decodeSingle<SubGoal>().idP!!
+        } else {
+            getIdP = client.from("Podcele").insert(newSubGoal) { select() }.decodeSingle<SubGoal>().idP!!
+        }
+        return getIdP
+    }
+    fun subGoalDelete(scope: CoroutineScope, idP: Int) {
+        scope.launch { client.from("Podcele").delete() {filter { eq("idP", idP) }} }
+    }
+    suspend fun getSubGoalsByIdC(idC: Int): MutableList<SubGoal> {
+        return client.from("Podcele").select() {filter { eq("idC", idC) }}.decodeList<SubGoal>().toMutableList()
+    }
+
+    //-------------------------FINISHED_GOALS-------------------------
+    suspend fun upsertFinishedSubGoal(scope: CoroutineScope, newFinishedSubgoal: newFinishedSubGoal) {
+        val fSubGoal = client.from("ZrealizowanePodcele").select()
+        { filter { eq("idP", newFinishedSubgoal.idP) } }.decodeSingleOrNull<finishedSubGoal>()
+        Log.d("___ja zaibavsa___", fSubGoal.toString())
+
+        if (fSubGoal != null) {
+            client.from("ZrealizowanePodcele").update(newFinishedSubgoal) {filter { eq("idP", fSubGoal.idP) }}
+            Log.d("---Czy update---", "Update $fSubGoal")
+        }
+        else {
+            Log.d("---Czy insert---", "Insert")
+            client.from("ZrealizowanePodcele").insert(newFinishedSubgoal)
         }
     }
 }

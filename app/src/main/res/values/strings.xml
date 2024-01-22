@@ -37,9 +37,21 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_nav_main">NavMainActivity</string>
+    <string name="title_fragment_home">asd</string>
+    // Goals
+    <string name="descr_goal">What\'s your goal?</string>
+    <string name="descr_goal_hint">Describe your goal here</string>
+    <string name="goal_repeatable">Is your goal repeatable?</string>
+    <string name="repeatable">Repeatable </string>
+    <string name="what_deadline">What the deadline?</string>
+    <string name="date_missing">Date is missing</string>
+    <string name="descr_missing">Write your goal first</string>
+    <string name="goal_deleted">The goal has been deleted</string>
+    <string name="sub_goal_default">Enter the subtask here</string>
+    <string name="sub_goal_add">+ Add a new subgoal</string>
+
+
 
 
 </resources>
